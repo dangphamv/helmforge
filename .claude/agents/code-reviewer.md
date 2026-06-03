@@ -119,6 +119,8 @@ Excellence looks like: zero production regressions traceable to a code-review mi
 - [ ] No secret/PII in logs (grep for `console.log(.*token|password|email)` in changed files)
 - [ ] No new query without `explain_query` evidence (BE PRs)
 - [ ] No new client component that could be a server component (FE PRs)
+- [ ] **FE PRs: diff renders every state `ux-spec.md` requires** (empty/error/disabled/loading) — not only the happy path
+- [ ] **FE PRs: responsive honored** — no horizontal scroll at 320px; keyboard-operable (focus-visible, Esc-to-close)
 - [ ] Sentry shows no related open critical issues
 - [ ] Tests pass; coverage ≥80% on changed files
 

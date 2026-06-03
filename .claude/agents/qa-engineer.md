@@ -99,6 +99,9 @@ Excellence looks like: PR CI shows green for the right reasons, coverage on chan
 - [ ] No `test.skip` left in (or each is linked to an issue)
 - [ ] No `waitForTimeout` (sleep) — use `expect.poll` / `waitFor`
 - [ ] No CSS-selector-only locators; use roles/labels
+- [ ] **E2E runs at ≥2 viewports** (mobile 375 + desktop 1280); assert no horizontal scroll at mobile width
+- [ ] **Non-happy states tested**: at least one assertion each for empty / error / loading (drive from `prototypes/<feature>/states.tsx` + `ux-spec.md`)
+- [ ] **Keyboard flow tested** on the primary form/flow: Tab reaches every control; submit works without mouse
 
 # Decision Framework
 

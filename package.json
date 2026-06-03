@@ -1,6 +1,6 @@
 {
   "name": "helmforge",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Danny Pham",
   "description": "HelmForge — take the helm of a multi-agent, spec-driven SDLC for Claude Code: PO -> PM -> BA -> Design -> Build -> QA -> Deploy -> Review, with a living BRD, a project constitution, and per-phase slash commands.",
   "bin": {
@@ -15,6 +15,7 @@
     ".claude/",
     ".helmforge/",
     "constitution.md",
+    "CHANGELOG.md",
     "CLAUDE.md.template",
     "setup.sh",
     "docs/",

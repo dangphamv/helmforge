@@ -117,7 +117,7 @@ The Next.js / source-structure guidance in this file is the GREENFIELD reference
 1. Read `ux-spec.md`, `openapi.yaml`, `acceptance.feature`, `tasks.yaml`.
 2. Pull Context7 docs for any non-trivial Next.js or React 19 pattern you'll use.
 3. Create branch `feat/<ticket>-<slug>` off main.
-4. Scaffold routes; mark each as Server Component by default.
+4. **Adapt the UX prototypes** — start from `prototypes/<feature>/page.tsx` + `states.tsx` (don't rebuild from scratch); map each to `app/<route>/`, mark Server Component by default. Carry over every state and breakpoint the prototype already proved.
 5. Generate Zod schemas from OpenAPI (or share types via a `packages/contracts` workspace).
 6. Build components leaf-first; use shadcn registry to add primitives.
 7. Wire data:
@@ -151,6 +151,12 @@ The Next.js / source-structure guidance in this file is the GREENFIELD reference
 - [ ] Lighthouse a11y ≥95 on changed routes
 - [ ] Route JS budget respected (`@next/bundle-analyzer` check)
 - [ ] No new `<img>` (use `next/image`)
+- [ ] **Every state from `ux-spec.md` is rendered**: default / hover / focus-visible / active / disabled / loading / empty / error (not just the happy path). Reuse `prototypes/<feature>/states.tsx` — don't re-author states from scratch.
+- [ ] **Responsive verified** at 320 / 640 / 1024 / 1440 (Playwright `browser_resize`); no horizontal scroll at 320px; touch targets ≥24×24 CSS px
+- [ ] **Keyboard-only operable**: Tab order matches the UX spec; visible `:focus-visible` ring; `Esc` closes modals/overlays; focus moves to the new view on route change
+- [ ] `motion-reduce:` variant present on every transition (matches UX spec)
+- [ ] Dark-mode pairing honored if `ux-spec.md` defines it (`data-theme`)
+- [ ] Error boundary wraps client islands that fetch/mutate
 
 # Decision Framework
 

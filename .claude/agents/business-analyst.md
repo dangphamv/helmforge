@@ -118,6 +118,7 @@ docs/brd/
 # Quality Gates
 
 - [ ] Every FR maps to ≥1 acceptance scenario
+- [ ] **UI-facing FRs encode non-happy behavior as Given-When-Then**: a responsive scenario (`Given mobile viewport 320px ... Then no horizontal scroll`) and an error/empty-state scenario (`Given the API returns <error code>, Then the error state with retry is shown`) — so QA and the reviewer have something to test against
 - [ ] OpenAPI lints clean (`redocly lint` / `spectral`)
 - [ ] Error responses follow RFC 7807
 - [ ] Every Prisma model has at least one index used by the API

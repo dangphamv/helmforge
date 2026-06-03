@@ -347,7 +347,7 @@ claude                                  # start a session
 /sdlc:init <description>                # new project from zero
 /sdlc <ticket>                          # full pipeline (feature/bug)
 /sdlc:quick <ticket>                    # lite path (1-3 agents)
-/sdlc:<phase> <scope>                   # one phase (vision|plan|brd|clarify|design|build|qa|deploy|review)
+/sdlc:<phase> <scope>                   # one phase (vision|plan|brd|clarify|analyze|design|build|qa|deploy|review)
 /sdlc:resume <ticket>                   # continue a paused pipeline
 /sdlc:onboard                           # analyze an existing repo (run once)
 > Use the <agent> subagent to ...       # run one agent

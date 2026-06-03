@@ -1,0 +1,56 @@
+# ============================================================================
+#  pipeline.config.yaml — How /sdlc runs: budget, tier, VCS, CI, preflight
+# ----------------------------------------------------------------------------
+#  /sdlc and /sdlc:quick read this file. No rebuild needed after editing.
+# ============================================================================
+
+# ---- BUDGET (cost / Max-quota control) -------------------------------------
+budget:
+  # Hard ceiling on agents for ONE ticket. If the pipeline needs more → STOP, ask the human.
+  max_agents_per_ticket: 12
+  # If the estimated tier exceeds this threshold, /sdlc asks for confirmation BEFORE running.
+  confirm_if_agents_over: 6
+  # Default effort per tier (overrides per-agent effort when you need to economize).
+  # high = max quality (expensive) · medium = balanced · low = fast/cheap
+  effort_by_tier:
+    trivial:  low
+    small:    medium
+    standard: high
+    large:    high
+  # HONEST NOTE: Claude Code has no hook to hard-cap tokens by dollars. This is
+  # pipeline right-sizing + warnings + confirmation, NOT a hard cap. The real
+  # ceiling is your Max plan's usage limit — watch /status inside Claude Code.
+
+# ---- TIER (pick pipeline depth by ticket size) -----------------------------
+# /sdlc auto-triages a ticket into one tier and runs the right number of agents. Override:
+#   /sdlc --tier standard <ticket>   or   /sdlc:quick <ticket> (force trivial/small)
+tiers:
+  # agent set per tier (only ACTIVE agents count; see agents.config.yaml)
+  trivial:  [backend-engineer-or-frontend-engineer, code-reviewer]          # e.g. text fix, config change, 1-2 lines
+  small:    [business-analyst, implementer, qa-engineer, code-reviewer]      # bug fix, small well-defined change
+  standard: [product-owner, project-manager, business-analyst, ux-ui-designer, implementer, qa-engineer, devops-engineer, code-reviewer]
+  large:    full-pipeline-with-human-checkpoints                            # large / high-risk feature
+  # Triage hints (estimated LOC + ambiguity + blast radius):
+  #   trivial  : <~15 LOC, 1 file, no API/DB change, no spec needed
+  #   small    : <~150 LOC, few files, clear contract, no major schema change
+  #   standard : typical feature: many files, may change API/DB/UI
+  #   large    : architecture/security/payments/multi-system change → needs human checkpoints
+
+# ---- VCS (not just GitHub) -------------------------------------------------
+vcs:
+  provider: github            # github | gitlab | bitbucket | azure-devops | none
+  default_branch: main
+  # github   : deepest integration (github MCP + .github/workflows/claude.yml)
+  # gitlab   : uses glab CLI + .helmforge/ci-templates/gitlab-ci.claude.yml; gitlab MCP if available
+  # bitbucket/azure : git CLI + provider CLI; open PR/MR manually (see .helmforge/ci-templates/)
+
+# ---- CI (auto-fix loop when CI is red) -------------------------------------
+ci:
+  auto_fix_on_red: true       # after opening a PR, if CI is red → agent fixes it
+  max_fix_attempts: 2         # bounded so it won't burn quota; beyond this, escalate to human
+  required_checks: [lint, typecheck, test, build]
+
+# ---- PREFLIGHT (verify the environment before coding) ----------------------
+preflight:
+  run_before_implement: true  # /sdlc runs .helmforge/scripts/preflight.sh before the coding phase
+  block_on_broken_baseline: true  # if main is already broken (test/build fail) → STOP, tell the human

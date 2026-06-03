@@ -1,0 +1,33 @@
+# ci-templates/gitlab-ci.claude.yml
+# Copy to .gitlab-ci.yml (or include it). GitLab equivalent of .github/workflows/claude.yml's
+# quality gates. The agentic @claude trigger on GitHub has no 1:1 GitLab equivalent yet —
+# on GitLab, run agents locally via Claude Code and let this pipeline gate the MR.
+
+stages: [quality]
+
+variables:
+  # set your package manager; override per project
+  PM: "pnpm"
+
+quality:
+  stage: quality
+  image: node:20
+  cache:
+    key: { files: ["pnpm-lock.yaml", "package-lock.json", "yarn.lock"] }
+    paths: [node_modules/, .pnpm-store/]
+  before_script:
+    - corepack enable || true
+    - $PM install --frozen-lockfile || $PM ci || $PM install
+  script:
+    - $PM run lint
+    - $PM run typecheck
+    - $PM run test
+    - $PM run build
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+
+# Notes:
+# - The kit's /sdlc Phase 9 reads MR CI status via the `glab` CLI when vcs.provider=gitlab.
+# - For a chat-triggered agent on GitLab, wire a webhook + a runner that invokes Claude Code;
+#   that's a custom integration, not shipped here. Until then: run /sdlc locally, push, let this gate.

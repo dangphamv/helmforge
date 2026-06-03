@@ -1,0 +1,63 @@
+# ============================================================================
+#  agents.config.yaml — Enable/disable agents for this repo
+# ----------------------------------------------------------------------------
+#  Some repos are frontend-only, some are backend-only. This file decides
+#  which agents are ACTIVE. After editing, run:  .helmforge/configure-agents.sh
+#
+#  Mechanism: ACTIVE agents live in .claude/agents/      (Claude Code sees them).
+#             Disabled agents move to .claude/agents-disabled/ (Claude Code ignores them).
+# ============================================================================
+
+# profile sets the default preset. Values:
+#   fullstack  — all 10 agents (web + api)
+#   frontend   — frontend-only repo (DISABLES backend-engineer)
+#   backend    — backend-only repo  (DISABLES ux-ui-designer + frontend-engineer)
+#   custom     — ignore the preset, use exactly the flags in `agents:` below
+profile: fullstack
+
+# Per-agent flags. When profile != custom, these flags are OVERWRITTEN by the preset
+# (unless you set profile: custom). To override a single agent vs the preset,
+# use profile: custom and edit by hand here.
+agents:
+  product-owner:       true   # 🟣 Value, KPI, scope, kill criteria (keep on)
+  project-manager:     true   # 🔵 Task breakdown, DAG, risks (keep on)
+  business-analyst:    true   # 🔷 OpenAPI + Prisma schema + acceptance.feature
+  solution-architect:  true   # 🟪 Greenfield scaffold + ADRs + source structure
+  ux-ui-designer:      true   # 🌸 Prototype + WCAG  (DISABLE if the repo has no UI)
+  frontend-engineer:   true   # 🟠 Web FE — Next.js/Nuxt/SvelteKit/Remix/Angular/Astro/React (DISABLE if no web)
+  backend-engineer:    true   # 🟢 API — NestJS/Express/Fastify/Hono/Django/FastAPI/Rails/Go/Spring/Laravel (DISABLE if no backend)
+  mobile-engineer:     false  # 🟦 Flutter / React Native — auto-ENABLED when stack.config.yaml mobile.framework != none
+  ai-engineer:         false  # 🟩 Chatbot/multi-agent/RAG runtime — auto-ENABLED when stack.config.yaml ai.framework != none
+  qa-engineer:         true   # 🟡 Playwright + axe-core (keep on)
+  devops-engineer:     true   # ⚪ CI/CD, deploy, Sentry
+  code-reviewer:       true   # 🔴 Final OWASP review  (keep on)
+
+# ----------------------------------------------------------------------------
+# Suggestions by repo type:
+#
+#   Pure Next.js repo (frontend calling an external API):
+#     profile: frontend
+#     → DISABLE: backend-engineer
+#     → keep BA on to define the API client contract (Zod) for the external API
+#
+#   Pure NestJS repo (API/service, no UI):
+#     profile: backend
+#     → DISABLE: ux-ui-designer, frontend-engineer
+#
+#   Library/SDK repo (no web, no api server):
+#     profile: custom
+#     → enable only: product-owner, business-analyst, qa-engineer, code-reviewer
+#     → DISABLE: ux-ui-designer, frontend-engineer, backend-engineer, devops-engineer
+#
+#   Mobile app + API (no web):
+#     stack.config.yaml: mobile.framework: flutter (or react-native), frontend.framework: none
+#     profile: backend   → mobile-engineer auto-enables because mobile.framework != none;
+#                          ux-ui-designer + frontend-engineer stay off
+#
+#   Fullstack monorepo:
+#     profile: fullstack  (default)
+#
+#   Note: mobile-engineer does NOT follow the web/api profile — it toggles by
+#   stack.config.yaml → mobile.framework (none = off). To force it manually,
+#   use profile: custom and set mobile-engineer: true/false.
+# ----------------------------------------------------------------------------

@@ -1,0 +1,83 @@
+# ============================================================================
+#  stack.config.yaml — Declare this repo's frameworks
+# ----------------------------------------------------------------------------
+#  frontend-engineer, backend-engineer and mobile-engineer read this file (and
+#  the ## Stack section in CLAUDE.md) to know which framework idioms to apply,
+#  which docs to pull from Context7, and which skills to load.
+#
+#  After changing it, update the ## Stack section in CLAUDE.md to match, then run
+#  .helmforge/configure-agents.sh --sync-skills  (syncs FE/BE/mobile skills to the
+#  framework — drops irrelevant ones, e.g. a Django repo won't load nestjs/prisma skills).
+#  The FE/BE/mobile agents also re-read this file on every run to apply the right idioms.
+# ============================================================================
+
+frontend:
+  # nextjs | nuxt | sveltekit | remix | react-router-7 | angular | astro | react-vite | none
+  framework: nextjs
+  language: typescript          # typescript | javascript
+  styling: tailwind             # tailwind | css-modules | styled-components | unocss | vanilla-extract
+  ui_kit: shadcn                # shadcn | mantine | mui | chakra | primevue | element-plus | none
+
+backend:
+  # Standalone API service:  nestjs | express | fastify | hono | django | fastapi | rails | go-gin | go-echo | spring-boot | laravel
+  # API INSIDE a meta-framework (no separate service): next-api | nuxt-server | sveltekit-api | remix-api
+  # No backend:    none
+  framework: nestjs
+  language: typescript          # typescript | python | ruby | go | java | php
+  orm: prisma                   # prisma | drizzle | typeorm | sqlalchemy | django-orm | activerecord | gorm | jpa | eloquent | supabase-js
+  database: postgres            # postgres | mysql | sqlite | mongodb | supabase  (supabase = Postgres + Auth + Storage + RLS)
+
+mobile:
+  # flutter | react-native | none
+  framework: none
+  # flutter:        language dart, state riverpod|bloc|provider
+  # react-native:   language typescript, framework expo, state zustand|redux-toolkit
+  language: dart                # dart (flutter) | typescript (react-native)
+  state: riverpod               # riverpod|bloc|provider (flutter) | zustand|redux-toolkit (react-native)
+
+ai:
+  # AI features INSIDE the product (chatbot, multi-agent, RAG for END-USERS) — DIFFERENT from the build-time SDLC agents
+  # vercel-ai-sdk | mastra | langgraph | none
+  framework: none
+  provider: anthropic           # anthropic | openai | google | gateway (Vercel AI Gateway)
+  features: chat                # chat | agents | rag | extraction  (comma-separated: "chat,rag,agents")
+
+# ----------------------------------------------------------------------------
+# COMMON CONFIGURATION EXAMPLES
+# ----------------------------------------------------------------------------
+#  Next.js + NestJS (default):
+#    frontend.framework: nextjs   backend.framework: nestjs
+#
+#  Vue full-stack:
+#    frontend: { framework: nuxt, ui_kit: primevue }
+#    backend:  { framework: fastify }
+#
+#  Python backend + React frontend:
+#    frontend: { framework: react-vite, ui_kit: mui }
+#    backend:  { framework: fastapi, language: python, orm: sqlalchemy }
+#
+#  Next.js fullstack + Supabase (API INSIDE Next.js, no separate service):
+#    frontend: { framework: nextjs, ui_kit: shadcn }
+#    backend:  { framework: next-api, language: typescript, orm: supabase-js, database: supabase }
+#    → a single Next.js app; frontend-engineer builds UI + Server Components (read),
+#      backend-engineer builds Server Actions + route handlers + Supabase schema/RLS/migrations (write).
+#      profile: fullstack (both agents work in the one Next.js repo).
+#    → or orm: drizzle / prisma if you want an ORM over Supabase's Postgres instead of supabase-js directly.
+#
+#  Mobile app + API (no web):
+#    frontend.framework: none
+#    backend.framework: fastapi
+#    mobile:   { framework: flutter, language: dart, state: riverpod }
+#
+#  React Native + Node:
+#    mobile:   { framework: react-native, language: typescript, state: zustand }
+#    backend:  { framework: hono }
+#
+#  Chatbot / multi-agent inside the app (Next.js + Supabase):
+#    frontend: { framework: nextjs }
+#    backend:  { framework: next-api, orm: supabase-js, database: supabase }
+#    ai:       { framework: vercel-ai-sdk, provider: anthropic, features: "chat,rag" }
+#    → ai-engineer auto-enables; builds streaming route + tools + RAG (pgvector) + evals + guardrails.
+#  Multi-agent workflow (pipeline of several specialists):
+#    ai:       { framework: mastra, provider: gateway, features: "agents,rag" }
+# ----------------------------------------------------------------------------

@@ -1,0 +1,42 @@
+{
+  "name": "helmforge",
+  "version": "1.0.0",
+  "author": "Danny Pham",
+  "description": "HelmForge — take the helm of a multi-agent, spec-driven SDLC for Claude Code: PO -> PM -> BA -> Design -> Build -> QA -> Deploy -> Review, with a living BRD, a project constitution, and per-phase slash commands.",
+  "bin": {
+    "helmforge": "bin/cli.mjs"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "bin/",
+    ".claude/",
+    ".helmforge/",
+    "constitution.md",
+    "CLAUDE.md.template",
+    "setup.sh",
+    "docs/",
+    "GUIDE.md"
+  ],
+  "keywords": [
+    "claude-code",
+    "claude",
+    "sdlc",
+    "spec-driven-development",
+    "ai-agents",
+    "multi-agent",
+    "scaffolding",
+    "brd"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dangphamv/helmforge.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dangphamv/helmforge/issues"
+  },
+  "homepage": "https://github.com/dangphamv/helmforge#readme"
+}
